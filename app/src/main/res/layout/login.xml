@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:stretchColumns="1"
+    android:weightSum="1">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="208dp"
+        android:src="@drawable/slog"
+        android:id="@+id/imageView"
+        android:visibility="visible" />
+
+    <TableRow>
+        <TextView
+            android:text="@string/acount"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:layout_height="wrap_content"
+            android:id="@+id/account"
+            android:hint="@string/userhint"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="@string/password"/>
+        <EditText
+            android:id="@+id/password"
+            android:inputType="textPassword"
+            android:layout_width="wrap_content"/>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+            android:layout_height="wrap_content"
+            android:id="@+id/remember_pass"/>
+
+        <TextView
+            android:text="@string/remember"
+            android:layout_height="wrap_content"/>
+
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:text="@string/login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login"
+            android:layout_span="2"/>
+    </TableRow>
+
+</TableLayout>

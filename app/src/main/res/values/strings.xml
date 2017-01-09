@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">TaskManager</string>
+    <string name="app_name">任务管理系统</string>
+    <string name="acount">用户名：</string>
+    <string name="password">密  码：</string>
+    <string name="remember">     记住密码</string>
+    <string name="login">登 录</string>
+    <string name="userhint">请输入用户名</string>
+    <string name="passhint">请输入密码</string>
+    <string name="success">登陆成功</string>
+    <string name="fail">登陆失败</string>
 </resources>
