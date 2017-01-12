@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import com.sand.taskmanager.R;
 import com.sand.taskmanager.ShowtaskActivity;
+import com.sand.taskmanager.User;
+
+import java.util.HashMap;
 
 import static android.icu.text.DateTimePatternGenerator.PatternInfo.OK;
 
@@ -24,7 +27,7 @@ import static android.icu.text.DateTimePatternGenerator.PatternInfo.OK;
  * Created by Biguang on 2017/1/4.
  */
 
-public class LoginAcitity extends AppCompatActivity implements View.OnClickListener{
+public class LoginAcitity extends AppCompatActivity {
 
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
@@ -41,9 +44,9 @@ public class LoginAcitity extends AppCompatActivity implements View.OnClickListe
             super.handleMessage(msg);
             String result = " ";
             if ("OK".equals(msg.obj.toString())) {
-                result = "success";
+                result = getResources().getString(R.string.success);
             } else if ("Wrong".equals(msg.obj.toString())) {
-                result = "fail";
+                result = getResources().getString(R.string.fail);
             } else {
                 result = msg.obj.toString();
             }
@@ -58,9 +61,9 @@ public class LoginAcitity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.login);
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         log = (ImageView) findViewById(R.id.imageView);
-        accountEdit = (EditText)findViewById(R.id.account);
-        passwordEdit = (EditText)findViewById(R.id.password);
-        remembPass = (CheckBox)findViewById(R.id.remember_pass);
+        accountEdit = (EditText) findViewById(R.id.account);
+        passwordEdit = (EditText) findViewById(R.id.password);
+        remembPass = (CheckBox) findViewById(R.id.remember_pass);
         login = (Button) findViewById(R.id.login);
 
         boolean isRemember = pref.getBoolean("remember_password", false);
@@ -74,27 +77,39 @@ public class LoginAcitity extends AppCompatActivity implements View.OnClickListe
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!isInputValid()) {
+                    return;
+                }
                 String name = accountEdit.getText().toString();
                 String password = passwordEdit.getText().toString();
-                boolean result = LoginService.check(name, password);
-                if (result){
-                    editor = pref.edit();
-                    if (remembPass.isChecked()) {
-                        editor.putBoolean("remember_password", true);
-                        editor.putString("account", name);
-                        editor.putString("password", password);
-                    } else {
-                        editor.clear();
-                    }
-                    editor.commit();
-                    Intent intent = new Intent(LoginAcitity.this, ShowtaskActivity.class);
-                    startActivity(intent);
-                    finish();
-                    Toast.makeText(getApplicationContext(), R.string.success, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.fail, Toast.LENGTH_SHORT).show();
+                HashMap<String, String> parms = new HashMap<String, String>();
+                parms.put(User.USERNAME, name);
+                parms.put(User.PASSWORD, password);
+                try {
+                    String url =  HttpUtils.getURLWithParams(address, parms);
+                    HttpUtils.sendHttpRequest(url, new HttpCallbackListener() {
+                        @Override
+                        public void onFinish(String response) {
+                            Message message = new Message();
+                            message.obj = response;
+                            mHandler.sendMessage(message);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Message message = new Message();
+                            message.obj = e.toString();
+                            mHandler.sendMessage(message);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            }
+
+            private boolean isInputValid() {
+                return true;
             }
         });
     }
-
+}
